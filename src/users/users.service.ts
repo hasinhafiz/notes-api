@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
@@ -12,7 +12,8 @@ export class UsersService {
     return this.repo.save(user); // Saves created entity to repository
   }
 
-  findByEmail(email: string) {
-    return this.repo.find({ where: { email } });
+  async findByEmail(email: string) {
+    const foundUser = await this.repo.findOne({ where: { email } });
+    return foundUser;
   }
 }
