@@ -17,16 +17,16 @@ export class Note {
 
   @AfterInsert()
   logInsert() {
-    console.log('Inserted User with id', this.id);
+    console.log('Inserted note with id', this.id);
   }
 
   @AfterRemove()
   logRemove() {
-    console.log('Removed User with id', this.id);
+    console.log('Removed note with id', this.id);
   }
 
   @AfterUpdate()
   logUpdate() {
-    console.log('Updated User with id', this.id);
+    console.log('Updated note with id', this.id);
   }
 }

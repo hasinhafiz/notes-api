@@ -14,16 +14,16 @@ export class User {
 
   @AfterInsert()
   logInsert() {
-    console.log('Inserted User with id', this.id);
+    console.log('Inserted user with id', this.id);
   }
 
   @AfterRemove()
   logRemove() {
-    console.log('Removed User with id', this.id);
+    console.log('Removed user with id', this.id);
   }
 
   @AfterUpdate()
   logUpdate() {
-    console.log('Updated User with id', this.id);
+    console.log('Updated user with id', this.id);
   }
 }
