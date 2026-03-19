@@ -2,26 +2,37 @@ import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/co
 import { InjectRepository } from '@nestjs/typeorm';
 import { Note } from './note.entity';
 import { Repository } from 'typeorm';
+import { NoteResponseDto } from './dto/note-response.dto';
 
 @Injectable()
 export class NotesService {
   constructor(@InjectRepository(Note) private repo: Repository<Note>) { }
 
-  create(title: string, content: string, userId: number) {
+  // Response mapping function
+  private toResponseDto(note: Note): NoteResponseDto {
+    return {
+      id: note.id,
+      title: note.title,
+      content: note.content,
+    }
+  }
+
+  async create(title: string, content: string, userId: number): Promise<NoteResponseDto> {
     // if (!userId) {
     //   throw new UnauthorizedException;
     // }
     const note = this.repo.create({ title, content, userId });
-    return this.repo.save(note);
+    const saved = await this.repo.save(note);
+
+    return this.toResponseDto(saved);
   }
 
   async list(userId: number) {
     // if (!userId) {
     //   throw new UnauthorizedException;
     // }
-
     const notes = await this.repo.find({ where: { userId } });
-    return notes;
+    return notes.map(note => this.toResponseDto(note));
   }
 
   async delete(id: number, userId) {
@@ -35,6 +46,8 @@ export class NotesService {
       throw new NotFoundException("Note not found!");
     }
 
-    return this.repo.remove(note!);
+    // return this.repo.remove(note!);
+    this.repo.remove(note);
+    return { message: 'Note deleted' };
   }
 }
