@@ -7,17 +7,29 @@ const saltrounds = 10;
 export class AuthService {
   constructor(private usersService: UsersService) { }
 
+  private toResponseDto(user: any) {
+    return {
+      id: user.id,
+      email: user.email,
+    };
+  }
+
   async signup(email: string, password: string) {
-    const user = await this.usersService.findByEmail(email);
-    if (user) {
+    const existingUser = await this.usersService.findByEmail(email);
+
+    if (existingUser) {
       throw new BadRequestException("Email already in use!");
+
     }
     const hash = await bcrypt.hash(password, saltrounds);
-    return this.usersService.create(email, hash);
+    const user = await this.usersService.create(email, hash);
+
+    return this.toResponseDto(user);
   }
 
   async signin(email: string, password: string) {
     const user = await this.usersService.findByEmail(email);
+
     if (!user) {
       throw new NotFoundException('User not found!');
     }
@@ -29,6 +41,6 @@ export class AuthService {
       throw new BadRequestException('Incorrect password!');
     }
 
-    return user;
+    return this.toResponseDto(user);
   }
 }

@@ -2,6 +2,7 @@ import { Body, Controller, Get, Post, Session } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { AuthService } from './auth.service';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiCookieAuth } from '@nestjs/swagger';
+import { UserResponseDto } from './dto/user-response.dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -13,7 +14,7 @@ export class AuthController {
   @Post('/signup')
   @ApiOperation({ summary: "Register new user" })
   @ApiBody({ type: CreateUserDto })
-  @ApiResponse({ status: 201, description: "User created" })
+  @ApiResponse({ status: 201, description: "User created", type: UserResponseDto })
   @ApiResponse({ status: 400, description: "Email already in use" })
   async signUp(@Body() body: CreateUserDto, @Session() session: any) {
     const user = await this.authService.signup(body.email, body.password);
@@ -24,7 +25,7 @@ export class AuthController {
   @Post('/signin')
   @ApiOperation({ summary: 'Sign-in' })
   @ApiBody({ type: CreateUserDto })
-  @ApiResponse({ status: 201, description: "Sign-in successful" })
+  @ApiResponse({ status: 201, description: "Sign-in successful", type: UserResponseDto })
   @ApiResponse({ status: 400, description: "Incorrect password" })
   @ApiResponse({ status: 404, description: "User not found" })
   async signIn(@Body() body: CreateUserDto, @Session() session: any) {
@@ -35,7 +36,7 @@ export class AuthController {
 
   @Post('/signout')
   @ApiOperation({ summary: 'Sign-out' })
-  @ApiResponse({ status: 201, description: "Sign-out successful" })
+  @ApiResponse({ status: 201, description: "Sign-out successful", schema: { example: { message: 'Signed out' } } })
   signOut(@Session() session: any) {
     session.userId = null;
     return { message: 'Signed out' };
@@ -44,7 +45,7 @@ export class AuthController {
   @Get('/whoami')
   @ApiCookieAuth()
   @ApiOperation({ summary: 'Check current user session' })
-  @ApiResponse({ status: 200 })
+  @ApiResponse({ status: 200, schema: { example: { userId: 1 } } })
   whoami(@Session() session: any) {
     return { userId: session.userId };
   }
