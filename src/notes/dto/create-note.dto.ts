@@ -1,13 +1,14 @@
 import { IsNumber, IsString } from "class-validator";
+import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateNoteDto {
 
+  @ApiProperty({ example: 'My First Note' })
   @IsString()
   title: string;
 
+  @ApiProperty({ example: 'This is the content of the note' })
   @IsString()
   content: string;
 
-  // @IsNumber()
-  // userId: number;
 }
