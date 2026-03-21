@@ -7,6 +7,16 @@ import session from 'express-session';
 async function bootstrap() {
 
   const app = await NestFactory.create(AppModule);
+
+  const allowedOrigins = process.env.FRONTEND_URL
+    ? process.env.FRONTEND_URL.split(',')
+    : ['http://localhost:3001'];
+
+  app.enableCors({
+    origin: allowedOrigins,
+    credentials: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+  });
   const config = new DocumentBuilder()
     .setTitle('Notes API')
     .setDescription('Notes API documentation')
