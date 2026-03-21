@@ -50,4 +50,18 @@ export class NotesService {
     this.repo.remove(note);
     return { message: 'Note deleted' };
   }
+
+  async update(title: string, content: string, id: number, userId: number) {
+    const note = await this.repo.findOneBy({ id, userId });
+
+    if (!note) {
+      throw new NotFoundException("Note not found!");
+    }
+
+    note.title = title;
+    note.content = content;
+
+    const updatedNote = await this.repo.save(note);
+    return this.toResponseDto(updatedNote);
+  }
 }
