@@ -6,7 +6,7 @@ import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiCookieAuth, ApiBody } 
 import { NoteResponseDto } from './dto/note-response.dto';
 import { UpdateNoteDto } from './dto/update-note.dto';
 
-@ApiTags('notes')
+@ApiTags('Notes')
 @ApiCookieAuth()
 @Controller('notes')
 @UseGuards(AuthGuard) // Use AuthGuard
